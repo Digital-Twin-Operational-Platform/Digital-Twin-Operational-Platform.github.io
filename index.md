@@ -1,5 +1,5 @@
-# Welcome to the Digital Twin Operational Platform!
 
-## Access the platform here
 
-## Documentation page 
+## Go to the platform page
+
+## Go to the documentation page 
