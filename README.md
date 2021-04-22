@@ -1,1 +1,1 @@
-# Digital Twin Operational Platform's public site
+This is the public site of the DTOP project.
