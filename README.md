@@ -1,1 +1,1 @@
-# Welcome to the Digital Twin Operational Platform!
+# Digital Twin Operational Platform's public site
