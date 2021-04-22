@@ -1,0 +1,9 @@
+Structural vibration control
+===============================
+
+
+
+.. automodule:: dtApp.dtCode.vibcontrol
+   :members:
+   :undoc-members:
+   :show-inheritance:

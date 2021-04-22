@@ -1,0 +1,33 @@
+Structural vibration control
+===============================
+
+
+.. automodule:: dtLib.vibcontrol.passiveStructure
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+.. automodule:: dtLib.vibcontrol.passiveControlTMD
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. automodule:: dtLib.vibcontrol.activeControlVFC
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+.. automodule:: dtLib.vibcontrol.activeControlVFCmodified
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+.. automodule:: dtLib.vibcontrol.activeControlLQG
+   :members:
+   :undoc-members:
+   :show-inheritance:

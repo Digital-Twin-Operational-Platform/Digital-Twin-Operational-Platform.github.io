@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Nonlinear constrol-based continuation &mdash; DTOP Cristallo 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Crossvalidation of data" href="lib_crossval.html" />
+    <link rel="prev" title="Uncertainty quantification" href="lib_unquant.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DTOP Cristallo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="learn.html">Climb your curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flaskapp.html">Web application</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="library.html">Scientific code library</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lib_control.html">Structural vibration control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib_unquant.html">Uncertainty quantification</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Nonlinear constrol-based continuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lib_crossval.html">Crossvalidation of data</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DTOP Cristallo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="library.html">Scientific code library</a> &raquo;</li>
+        
+      <li>Nonlinear constrol-based continuation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/lib_nlcbc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-dtLib.nonlinearcbc.nonlinearcbc2">
+<span id="nonlinear-constrol-based-continuation"></span><h1>Nonlinear constrol-based continuation<a class="headerlink" href="#module-dtLib.nonlinearcbc.nonlinearcbc2" title="Permalink to this headline">¶</a></h1>
+<p>This function performs the control base continuation simulation of the structure with a stiffness nonlinearity. It also performs an amplitude sweep simulation and a frequency sweep simulation.</p>
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.CBC_3st">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">CBC_3st</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Minv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtarget_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.CBC_3st" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.Open_loop_3st">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">Open_loop_3st</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Minv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s13</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.Open_loop_3st" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.amp_sweep_add">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">amp_sweep_add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dudt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">IC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Minv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Amplist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Amplist2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Amplist3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asw_per</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.amp_sweep_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.continuation">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">continuation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dudt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trapz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Minv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtarget_coeff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">IC_act</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Astar1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bstar1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Target_c_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Target_s_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">etol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbc_per</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.continuation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.freq_sweep_add">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">freq_sweep_add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dudt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">IC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Minv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s13</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Phi0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Amplist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Amplist2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Amplist3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fsw_per</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.freq_sweep_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.harm_calc">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">harm_calc</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trapz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.harm_calc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtLib.nonlinearcbc.nonlinearcbc2.trapz">
+<code class="sig-prename descclassname"><span class="pre">dtLib.nonlinearcbc.nonlinearcbc2.</span></code><code class="sig-name descname"><span class="pre">trapz</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtLib.nonlinearcbc.nonlinearcbc2.trapz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="lib_crossval.html" class="btn btn-neutral float-right" title="Crossvalidation of data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lib_unquant.html" class="btn btn-neutral float-left" title="Uncertainty quantification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, DTOP-Cristallo.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+Crossvalidation of data
+========================
+
+
+
+.. automodule:: dtApp.dtCode.crossvalidation
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Design under uncertainty &mdash; DTOP Cristallo 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Structural vibration control" href="app_control.html" />
+    <link rel="prev" title="Web application" href="flaskapp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DTOP Cristallo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="learn.html">Climb your curve</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="flaskapp.html">Web application</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Design under uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_control.html">Structural vibration control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_unquant.html">Uncertainty quantification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_fea.html">Finite element analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_nlcbc.html">Non-linear control-based continuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app_crossval.html">Crossvalidation of data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Scientific code library</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DTOP Cristallo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="flaskapp.html">Web application</a> &raquo;</li>
+        
+      <li>Design under uncertainty</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/app_design.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-dtApp.dtCode.design">
+<span id="design-under-uncertainty"></span><h1>Design under uncertainty<a class="headerlink" href="#module-dtApp.dtCode.design" title="Permalink to this headline">¶</a></h1>
+<p>This module contains three app routes:</p>
+<p>1: &#64;app.route(‘/Design_under_uncertainty’)
+Displays an Input-Data page to define the parameters of the distribution
+of the properties of the three-storey building: mass, stiffness, damping
+and input force. The parameters of the Gaussian distribution are the
+mean value (mu) and standard deviation (sigma), whereas the corresponding
+parameters of the Gamma distribution are shape (kappa) and scale (theta)
+This page also allows to define the frequency of analysis, the number of
+Monte Carlo simulations and the output requested for the Fisher Information
+Matrix (the outputs are the displacements of each floor and the shear force
+between two floors, at least one output must be selected to proceed)
+The default values are given by experimental data gathered at Sheffield University
+The Frequency response function displayed is calculated with the mean values.</p>
+<p>2: &#64;app.route(‘/Design_under_uncertainty_output’)
+Displays the probability distribution of the selected outputs. The number of
+bins of the 1-D histogram can be modified. Additionally, it allows to define
+the number of bins of the n-dimentional joint pdf of the correlated outputs
+for the analysis of the sensitivities based on the Fisher Information Matrix</p>
+<p>3: &#64;app.route(‘/Design_under_uncertainty_fisher’)
+Plots the scaled form of the Fisher Information Matrix and the corresponding
+eigenvalues and eigenvectors</p>
+<dl class="py function">
+<dt id="dtApp.dtCode.design.EigenBar">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">EigenBar</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y_listtext1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vIMnorm1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lamIMnorm1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">II</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.EigenBar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.Histo">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">Histo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">I</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_bins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.Histo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="dtApp.dtCode.design.InputForm">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">InputForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.InputForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wtforms.form.Form</span></code></p>
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.C1_type">
+<code class="sig-name descname"><span class="pre">C1_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.C1_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.C2_type">
+<code class="sig-name descname"><span class="pre">C2_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.C2_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.C3_type">
+<code class="sig-name descname"><span class="pre">C3_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.C3_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.F1_type">
+<code class="sig-name descname"><span class="pre">F1_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.F1_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.F2_type">
+<code class="sig-name descname"><span class="pre">F2_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.F2_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.F3_type">
+<code class="sig-name descname"><span class="pre">F3_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.F3_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.JPDFsize">
+<code class="sig-name descname"><span class="pre">JPDFsize</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'jpdf_size',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.JPDFsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.K1_type">
+<code class="sig-name descname"><span class="pre">K1_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.K1_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.K2_type">
+<code class="sig-name descname"><span class="pre">K2_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.K2_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.K3_type">
+<code class="sig-name descname"><span class="pre">K3_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.K3_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.M1_type">
+<code class="sig-name descname"><span class="pre">M1_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.M1_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.M2_type">
+<code class="sig-name descname"><span class="pre">M2_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.M2_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.M3_type">
+<code class="sig-name descname"><span class="pre">M3_type</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(SelectField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Type',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;],</span> <span class="pre">'choices':</span> <span class="pre">[(1,</span> <span class="pre">'Gaussian'),</span> <span class="pre">(2,</span> <span class="pre">'Gamma')]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.M3_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.Xsize">
+<code class="sig-name descname"><span class="pre">Xsize</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'x_size',</span> <span class="pre">'default':</span> <span class="pre">20,</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.Xsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.c1_mean">
+<code class="sig-name descname"><span class="pre">c1_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'c1</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.c1_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.c1_sigma">
+<code class="sig-name descname"><span class="pre">c1_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'c1</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.c1_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.c2_mean">
+<code class="sig-name descname"><span class="pre">c2_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'c2</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.c2_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.c2_sigma">
+<code class="sig-name descname"><span class="pre">c2_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'c2</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.c2_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.c3_mean">
+<code class="sig-name descname"><span class="pre">c3_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'c3</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.c3_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.c3_sigma">
+<code class="sig-name descname"><span class="pre">c3_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'c3</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.c3_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.check_s1">
+<code class="sig-name descname"><span class="pre">check_s1</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Shear</span> <span class="pre">force</span> <span class="pre">s1'})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.check_s1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.check_s2">
+<code class="sig-name descname"><span class="pre">check_s2</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Shear</span> <span class="pre">force</span> <span class="pre">s2'})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.check_s2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.check_s3">
+<code class="sig-name descname"><span class="pre">check_s3</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Shear</span> <span class="pre">force</span> <span class="pre">s3'})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.check_s3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.check_x1">
+<code class="sig-name descname"><span class="pre">check_x1</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Displacement</span> <span class="pre">x1'})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.check_x1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.check_x2">
+<code class="sig-name descname"><span class="pre">check_x2</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Displacement</span> <span class="pre">x2'})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.check_x2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.check_x3">
+<code class="sig-name descname"><span class="pre">check_x3</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(BooleanField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Displacement</span> <span class="pre">x3'})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.check_x3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.f1_mean">
+<code class="sig-name descname"><span class="pre">f1_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'f1</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.f1_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.f1_sigma">
+<code class="sig-name descname"><span class="pre">f1_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'f1</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.f1_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.f2_mean">
+<code class="sig-name descname"><span class="pre">f2_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'f2</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.f2_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.f2_sigma">
+<code class="sig-name descname"><span class="pre">f2_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'f2</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.f2_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.f3_mean">
+<code class="sig-name descname"><span class="pre">f3_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'f3</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.f3_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.f3_sigma">
+<code class="sig-name descname"><span class="pre">f3_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'f3</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.f3_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.freq_analysis">
+<code class="sig-name descname"><span class="pre">freq_analysis</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Frequency</span> <span class="pre">of</span> <span class="pre">Analysis',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.freq_analysis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.k1_mean">
+<code class="sig-name descname"><span class="pre">k1_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'k1</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.k1_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.k1_sigma">
+<code class="sig-name descname"><span class="pre">k1_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'k1</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.k1_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.k2_mean">
+<code class="sig-name descname"><span class="pre">k2_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'k2</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.k2_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.k2_sigma">
+<code class="sig-name descname"><span class="pre">k2_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'k2</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.k2_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.k3_mean">
+<code class="sig-name descname"><span class="pre">k3_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'k3</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.k3_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.k3_sigma">
+<code class="sig-name descname"><span class="pre">k3_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'k3</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.k3_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.m1_mean">
+<code class="sig-name descname"><span class="pre">m1_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'m1</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.m1_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.m1_sigma">
+<code class="sig-name descname"><span class="pre">m1_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'m1</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.m1_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.m2_mean">
+<code class="sig-name descname"><span class="pre">m2_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'m2</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.m2_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.m2_sigma">
+<code class="sig-name descname"><span class="pre">m2_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'m2</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.m2_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.m3_mean">
+<code class="sig-name descname"><span class="pre">m3_mean</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'m3</span> <span class="pre">mean',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.m3_mean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.m3_sigma">
+<code class="sig-name descname"><span class="pre">m3_sigma</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'m3</span> <span class="pre">sigma',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.m3_sigma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="dtApp.dtCode.design.InputForm.n_realisations">
+<code class="sig-name descname"><span class="pre">n_realisations</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(FloatField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'N</span> <span class="pre">Monte</span> <span class="pre">Carlo',</span> <span class="pre">'validators':</span> <span class="pre">[&lt;wtforms.validators.InputRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#dtApp.dtCode.design.InputForm.n_realisations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.OutDis">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">OutDis</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.OutDis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.dplot4M">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">dplot4M</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.dplot4M" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.gamma">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">gamma</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw samples from a Gamma distribution.</p>
+<p>Samples are drawn from a Gamma distribution with specified parameters,
+<cite>shape</cite> (sometimes designated “k”) and <cite>scale</cite> (sometimes designated
+“theta”), where both parameters are &gt; 0.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">gamma</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; please see the <span class="xref std std-ref">random-quick-start</span>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> (<em>float</em><em> or </em><em>array_like of floats</em>) – The shape of the gamma distribution. Must be non-negative.</p></li>
+<li><p><strong>scale</strong> (<em>float</em><em> or </em><em>array_like of floats</em><em>, </em><em>optional</em>) – The scale of the gamma distribution. Must be non-negative.
+Default is equal to 1.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><em>optional</em>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  If size is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default),
+a single value is returned if <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> are both scalars.
+Otherwise, <code class="docutils literal notranslate"><span class="pre">np.broadcast(shape,</span> <span class="pre">scale).size</span></code> samples are drawn.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Drawn samples from the parameterized gamma distribution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray or scalar</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.gamma</span></code></dt><dd><p>probability density function, distribution or cumulative density function, etc.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Generator.gamma</span></code></dt><dd><p>which should be used for new code.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The probability density for the Gamma distribution is</p>
+<div class="math notranslate nohighlight">
+\[p(x) = x^{k-1}\frac{e^{-x/\theta}}{\theta^k\Gamma(k)},\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> is the shape and <span class="math notranslate nohighlight">\(\theta\)</span> the scale,
+and <span class="math notranslate nohighlight">\(\Gamma\)</span> is the Gamma function.</p>
+<p>The Gamma distribution is often used to model the times to failure of
+electronic components, and arises naturally in processes for which the
+waiting times between Poisson distributed events are relevant.</p>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets">1</span></dt>
+<dd><p>Weisstein, Eric W. “Gamma Distribution.” From MathWorld–A
+Wolfram Web Resource.
+<a class="reference external" href="http://mathworld.wolfram.com/GammaDistribution.html">http://mathworld.wolfram.com/GammaDistribution.html</a></p>
+</dd>
+<dt class="label" id="id2"><span class="brackets">2</span></dt>
+<dd><p>Wikipedia, “Gamma distribution”,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Gamma_distribution">https://en.wikipedia.org/wiki/Gamma_distribution</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Draw samples from the distribution:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span>  <span class="c1"># mean=4, std=2*sqrt(2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Display the histogram of the samples, along with
+the probability density function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">sps</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">ignored</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">bins</span><span class="o">**</span><span class="p">(</span><span class="n">shape</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">bins</span><span class="o">/</span><span class="n">scale</span><span class="p">)</span> <span class="o">/</span>  
+<span class="gp">... </span>                     <span class="p">(</span><span class="n">sps</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">*</span><span class="n">scale</span><span class="o">**</span><span class="n">shape</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.normal">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">normal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw random samples from a normal (Gaussian) distribution.</p>
+<p>The probability density function of the normal distribution, first
+derived by De Moivre and 200 years later by both Gauss and Laplace
+independently <a href="#id8"><span class="problematic" id="id3">[2]_</span></a>, is often called the bell curve because of
+its characteristic shape (see the example below).</p>
+<p>The normal distributions occurs often in nature.  For example, it
+describes the commonly occurring distribution of samples influenced
+by a large number of tiny, random disturbances, each with its own
+unique distribution <a href="#id9"><span class="problematic" id="id4">[2]_</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">normal</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; please see the <span class="xref std std-ref">random-quick-start</span>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>float</em><em> or </em><em>array_like of floats</em>) – Mean (“centre”) of the distribution.</p></li>
+<li><p><strong>scale</strong> (<em>float</em><em> or </em><em>array_like of floats</em>) – Standard deviation (spread or “width”) of the distribution. Must be
+non-negative.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><em>optional</em>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  If size is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default),
+a single value is returned if <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> are both scalars.
+Otherwise, <code class="docutils literal notranslate"><span class="pre">np.broadcast(loc,</span> <span class="pre">scale).size</span></code> samples are drawn.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Drawn samples from the parameterized normal distribution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray or scalar</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.norm</span></code></dt><dd><p>probability density function, distribution or cumulative density function, etc.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Generator.normal</span></code></dt><dd><p>which should be used for new code.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The probability density for the Gaussian distribution is</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \frac{1}{\sqrt{ 2 \pi \sigma^2 }}
+e^{ - \frac{ (x - \mu)^2 } {2 \sigma^2} },\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean and <span class="math notranslate nohighlight">\(\sigma\)</span> the standard
+deviation. The square of the standard deviation, <span class="math notranslate nohighlight">\(\sigma^2\)</span>,
+is called the variance.</p>
+<p>The function has its peak at the mean, and its “spread” increases with
+the standard deviation (the function reaches 0.607 times its maximum at
+<span class="math notranslate nohighlight">\(x + \sigma\)</span> and <span class="math notranslate nohighlight">\(x - \sigma\)</span> <a href="#id10"><span class="problematic" id="id5">[2]_</span></a>).  This implies that
+normal is more likely to return samples lying close to the mean, rather
+than those far away.</p>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id6"><span class="brackets">1</span></dt>
+<dd><p>Wikipedia, “Normal distribution”,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Normal_distribution">https://en.wikipedia.org/wiki/Normal_distribution</a></p>
+</dd>
+<dt class="label" id="id7"><span class="brackets">2</span></dt>
+<dd><p>P. R. Peebles Jr., “Central Limit Theorem” in “Probability,
+Random Variables and Random Signal Principles”, 4th ed., 2001,
+pp. 51, 51, 125.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Draw samples from the distribution:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span> <span class="c1"># mean and standard deviation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Verify the mean and the variance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">mu</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+<span class="go">0.0  # may vary</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">sigma</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">0.1  # may vary</span>
+</pre></div>
+</div>
+<p>Display the histogram of the samples, along with
+the probability density function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">ignored</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">*</span>
+<span class="gp">... </span>               <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="p">(</span><span class="n">bins</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="p">),</span>
+<span class="gp">... </span>         <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Two-by-four array of samples from N(3, 6.25):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="go">array([[-4.49401501,  4.00950034, -1.81814867,  7.29718677],   # random</span>
+<span class="go">       [ 0.39924804,  4.68456316,  4.99394529,  4.84057254]])  # random</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.start_method">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">start_method</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.start_method" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="dtApp.dtCode.design.testt">
+<code class="sig-prename descclassname"><span class="pre">dtApp.dtCode.design.</span></code><code class="sig-name descname"><span class="pre">testt</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dtApp.dtCode.design.testt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="app_control.html" class="btn btn-neutral float-right" title="Structural vibration control" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="flaskapp.html" class="btn btn-neutral float-left" title="Web application" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, DTOP-Cristallo.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
